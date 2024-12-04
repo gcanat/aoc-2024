@@ -24,7 +24,6 @@ pub fn solve_d3_p1(mult: &Vec<(usize, usize)>) -> usize {
 pub fn gen_d3_p2(input: &str) -> Vec<(usize, usize)> {
     let re = Regex::new(r"(?s)don't\(\).*?(do\(\)|$)").unwrap();
     let filtered_input = re.replace_all(input, "");
-    println!("{}", filtered_input);
     parse_mult(&filtered_input)
 }
 
