@@ -2,7 +2,9 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 
-/// Seems like a good opportunity to fool around with cmp/ordering traits
+/// Seems like a good opportunity to fool around with cmp/ordering traits.
+/// If our `Rule` struct implements the Ord trait, we can just call `sort()`
+/// on a `Vec<Rule>` to get it sorted.
 
 struct Rule {
     before: usize,
@@ -47,22 +49,20 @@ fn parse(input: &str) -> (Rules, Updates) {
     for l in input.lines() {
         if l.contains("|") {
             let mut entries = l.split('|');
-            let k = entries.next().unwrap();
-            let v = entries.next().unwrap();
-            let k_int = k.parse::<usize>().unwrap();
-            let v_int = v.parse::<usize>().unwrap();
+            let k: usize = entries.next().unwrap().parse().unwrap();
+            let v: usize = entries.next().unwrap().parse().unwrap();
             rules
-                .entry(k_int)
-                .and_modify(|c| c.after.push(v_int))
+                .entry(k)
+                .and_modify(|c| c.after.push(v))
                 .or_insert(Rule {
-                    before: k_int,
-                    after: vec![v_int],
+                    before: k,
+                    after: vec![v],
                 });
-            if rules.get(&v_int).is_none() {
+            if rules.get(&v).is_none() {
                 rules.insert(
-                    v_int,
+                    v,
                     Rule {
-                        before: v_int,
+                        before: v,
                         after: vec![],
                     },
                 );
@@ -122,33 +122,33 @@ mod tests {
     use super::*;
 
     const INPUT: &'static str = "47|53\n\
-        97|13\n\
-        97|61\n\
-        97|47\n\
-        75|29\n\
-        61|13\n\
-        75|53\n\
-        29|13\n\
-        97|29\n\
-        53|29\n\
-        61|53\n\
-        97|53\n\
-        61|29\n\
-        47|13\n\
-        75|47\n\
-        97|75\n\
-        47|61\n\
-        75|61\n\
-        47|29\n\
-        75|13\n\
-        53|13\n\
-        \n\
-        75,47,61,53,29\n\
-        97,61,53,29,13\n\
-        75,29,13\n\
-        75,97,47,61,53\n\
-        61,13,29\n\
-        97,13,75,29,47";
+                                 97|13\n\
+                                 97|61\n\
+                                 97|47\n\
+                                 75|29\n\
+                                 61|13\n\
+                                 75|53\n\
+                                 29|13\n\
+                                 97|29\n\
+                                 53|29\n\
+                                 61|53\n\
+                                 97|53\n\
+                                 61|29\n\
+                                 47|13\n\
+                                 75|47\n\
+                                 97|75\n\
+                                 47|61\n\
+                                 75|61\n\
+                                 47|29\n\
+                                 75|13\n\
+                                 53|13\n\
+                                 \n\
+                                 75,47,61,53,29\n\
+                                 97,61,53,29,13\n\
+                                 75,29,13\n\
+                                 75,97,47,61,53\n\
+                                 61,13,29\n\
+                                 97,13,75,29,47";
 
     #[test]
     fn part1_example() {
