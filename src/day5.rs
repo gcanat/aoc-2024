@@ -93,12 +93,11 @@ fn get_middle(update: &Vec<usize>) -> usize {
 }
 
 #[aoc(day5, part1)]
-fn part1(input: &(Rules, Updates)) -> usize {
-    input
-        .1
+fn part1((rules, updates): &(Rules, Updates)) -> usize {
+    updates
         .iter()
         .filter(|u| {
-            let sorted = sort_update(u, &input.0);
+            let sorted = sort_update(u, &rules);
             *u == &sorted
         })
         .map(get_middle)
@@ -106,9 +105,9 @@ fn part1(input: &(Rules, Updates)) -> usize {
 }
 
 #[aoc(day5, part2)]
-fn part2(input: &(Rules, Updates)) -> usize {
-    input.1.iter().fold(0, |acc, u| {
-        let sorted = sort_update(u, &input.0);
+fn part2((rules, updates): &(Rules, Updates)) -> usize {
+    updates.iter().fold(0, |acc, u| {
+        let sorted = sort_update(u, &rules);
         if !(u == &sorted) {
             acc + get_middle(&sorted)
         } else {
