@@ -66,7 +66,6 @@ fn solve1((map, guard_pos): &(Map, (i32, i32))) -> HashSet<(i32, i32)> {
         } else {
             // obstacle: we need to change direction an let the next iteration advance
             direction = dir_iter.next().unwrap();
-            continue;
         }
     }
     // get all visited points
@@ -81,8 +80,6 @@ fn solve2((map, guard_pos): &(Map, (i32, i32))) -> usize {
     // keep track of visited positions and directions
     let mut visited: HashSet<(i32, i32, i32, i32)> = HashSet::new();
 
-    let mut cycle: usize = 0;
-
     loop {
         let Some((next_pos, is_obstacle)) = get_next_pos(&curr_pos, &direction, &map) else {
             // guard went out of the map
@@ -96,16 +93,14 @@ fn solve2((map, guard_pos): &(Map, (i32, i32))) -> usize {
             // we just check if we previously hit that obstacle coming from the same direction
             // it is much cheaper than checking at every step.
             if visited.contains(&(curr_pos.0, curr_pos.1, direction.0, direction.1)) {
-                cycle = 1;
-                break;
+                return 1;
             }
             visited.insert((curr_pos.0, curr_pos.1, direction.0, direction.1));
             // obstacle: we need to change direction an let the next iteration advance
             direction = dir_iter.next().unwrap();
-            continue;
         }
     }
-    cycle
+    0
 }
 
 #[aoc(day6, part1)]
