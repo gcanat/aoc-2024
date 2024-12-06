@@ -73,7 +73,7 @@ fn solve1((map, guard_pos): &(Map, (i32, i32))) -> HashSet<(i32, i32)> {
     visited
 }
 
-fn solve2((map, guard_pos): &(Map, (i32, i32))) -> bool {
+fn solve2((map, guard_pos): &(Map, (i32, i32))) -> usize {
     let mut dir_iter = DIRECTIONS.iter().cycle();
     let mut direction = dir_iter.next().unwrap();
     let mut curr_pos = *guard_pos;
@@ -81,7 +81,7 @@ fn solve2((map, guard_pos): &(Map, (i32, i32))) -> bool {
     // keep track of visited positions and directions
     let mut visited: HashSet<(i32, i32, i32, i32)> = HashSet::new();
 
-    let mut cycle = false;
+    let mut cycle: usize = 0;
 
     loop {
         let Some((next_pos, is_obstacle)) = get_next_pos(&curr_pos, &direction, &map) else {
@@ -96,7 +96,7 @@ fn solve2((map, guard_pos): &(Map, (i32, i32))) -> bool {
             // we just check if we previously hit that obstacle coming from the same direction
             // it is much cheaper than checking at every step.
             if visited.contains(&(curr_pos.0, curr_pos.1, direction.0, direction.1)) {
-                cycle = true;
+                cycle = 1;
                 break;
             }
             visited.insert((curr_pos.0, curr_pos.1, direction.0, direction.1));
@@ -122,12 +122,7 @@ fn part2((map, guard_pos): &(Map, (i32, i32))) -> usize {
         .map(|(x, y)| {
             let mut new_map = map.clone();
             new_map[*x as usize][*y as usize] = 1;
-            let cycle = solve2(&(new_map, (guard_pos.0, guard_pos.1)));
-            if cycle {
-                1
-            } else {
-                0
-            }
+            solve2(&(new_map, (guard_pos.0, guard_pos.1)))
         })
         .sum()
 }
