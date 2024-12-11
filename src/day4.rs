@@ -1,18 +1,13 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use std::collections::HashMap;
 
-// grid is 140x140 but we add a padding of 3 on each side
-const GRID_SIZE_X: usize = 146;
-// grid is 140x140 but we add a padding of 1 on each side
-const GRID_SIZE_A: usize = 142;
-
 // types for part1
-type GridX = [[usize; GRID_SIZE_X]; GRID_SIZE_X];
+type GridX = Vec<Vec<usize>>;
 type SubGridX = [[usize; 7]; 7];
 type CoordsX = [[[usize; 2]; 3]; 8];
 
 // types for part2
-type GridA = [[usize; GRID_SIZE_A]; GRID_SIZE_A];
+type GridA = Vec<Vec<usize>>;
 type SubGridA = [[usize; 3]; 3];
 type CoordsA = [[[usize; 2]; 2]; 2];
 
@@ -52,7 +47,9 @@ fn create_lookup() -> HashMap<&'static char, usize> {
 #[aoc_generator(day4, part1)]
 fn parse_p1(input: &str) -> GridX {
     let lookup = create_lookup();
-    let mut grid = [[0; GRID_SIZE_X]; GRID_SIZE_X];
+    let grid_size = input.lines().count() + 6;
+    // let mut grid = [[0; GRID_SIZE_X]; GRID_SIZE_X];
+    let mut grid = vec![vec![0; grid_size]; grid_size];
     for (i, l) in input.lines().enumerate() {
         for (j, c) in l.chars().enumerate() {
             grid[i + 3][j + 3] = *lookup.get(&c).unwrap_or(&0_usize);
@@ -100,8 +97,9 @@ fn create_subgridx(input: &GridX, corner: &[usize; 2]) -> SubGridX {
 #[aoc(day4, part1)]
 fn part1(input: &GridX) -> usize {
     let mut count = 0;
-    for i in 0..140 {
-        for j in 0..140 {
+    let n = input.len() - 6;
+    for i in 0..n {
+        for j in 0..n {
             if input[i + 3][j + 3] == 1 {
                 let subgrid = create_subgridx(input, &[i, j]);
                 count += search_subgrid(&subgrid);
@@ -154,7 +152,8 @@ fn create_subgrid_a(input: &GridA, corner: &[usize; 2]) -> SubGridA {
 #[aoc_generator(day4, part2)]
 fn parse_p2(input: &str) -> GridA {
     let lookup = create_lookup();
-    let mut grid = [[0; GRID_SIZE_A]; GRID_SIZE_A];
+    let grid_size = input.lines().count() + 2;
+    let mut grid = vec![vec![0; grid_size]; grid_size];
     for (i, l) in input.lines().enumerate() {
         for (j, c) in l.chars().enumerate() {
             grid[i + 1][j + 1] = *lookup.get(&c).unwrap_or(&0_usize);
@@ -166,8 +165,9 @@ fn parse_p2(input: &str) -> GridA {
 #[aoc(day4, part2)]
 fn part2(input: &GridA) -> usize {
     let mut count = 0;
-    for i in 0..140 {
-        for j in 0..140 {
+    let n = input.len() - 2;
+    for i in 0..n {
+        for j in 0..n {
             if input[i + 1][j + 1] == 3 {
                 let subgrid = create_subgrid_a(input, &[i, j]);
                 count += search_subgrid_a(&subgrid);
@@ -175,4 +175,30 @@ fn part2(input: &GridA) -> usize {
         }
     }
     count
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const INPUT: &'static str = "MMMSXXMASM\n\
+                                 MSAMXMSMSA\n\
+                                 AMXSXMAAMM\n\
+                                 MSAMASMSMX\n\
+                                 XMASAMXAMM\n\
+                                 XXAMMXXAMA\n\
+                                 SMSMSASXSS\n\
+                                 SAXAMASAAA\n\
+                                 MAMMMXMMMM\n\
+                                 MXMXAXMASX";
+
+    #[test]
+    fn part1_example() {
+        assert_eq!(part1(&parse_p1(INPUT)), 18);
+    }
+
+    #[test]
+    fn part2_example() {
+        assert_eq!(part2(&parse_p2(INPUT)), 9);
+    }
 }
