@@ -11,23 +11,40 @@ fn parse_mult(input: &str) -> Vec<(usize, usize)> {
 }
 
 #[aoc_generator(day3, part1)]
-pub fn gen_d3_p1(input: &str) -> Vec<(usize, usize)> {
+pub fn parse1(input: &str) -> Vec<(usize, usize)> {
     parse_mult(input)
 }
 
 #[aoc(day3, part1)]
-pub fn solve_d3_p1(mult: &Vec<(usize, usize)>) -> usize {
+pub fn part1(mult: &Vec<(usize, usize)>) -> usize {
     mult.iter().fold(0, |acc, (a, b)| acc + (a * b))
 }
 
 #[aoc_generator(day3, part2)]
-pub fn gen_d3_p2(input: &str) -> Vec<(usize, usize)> {
+pub fn parse2(input: &str) -> Vec<(usize, usize)> {
     let re = Regex::new(r"(?s)don't\(\).*?(do\(\)|$)").unwrap();
     let filtered_input = re.replace_all(input, "");
     parse_mult(&filtered_input)
 }
 
 #[aoc(day3, part2)]
-pub fn solve_d3_p2(mult: &Vec<(usize, usize)>) -> usize {
+pub fn part2(mult: &Vec<(usize, usize)>) -> usize {
     mult.iter().fold(0, |acc, (a, b)| acc + (a * b))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn part1_example() {
+        let input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
+        assert_eq!(part1(&parse1(input)), 161);
+    }
+
+    #[test]
+    fn part2_example() {
+        let input = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
+        assert_eq!(part2(&parse2(input)), 48);
+    }
 }
