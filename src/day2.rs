@@ -4,7 +4,7 @@ use aoc_runner_derive::{aoc, aoc_generator};
 // - Any two adjacent levels differ by at least one and at most three.
 
 #[aoc_generator(day2)]
-pub fn gen_d2(input: &str) -> Vec<Vec<usize>> {
+pub fn parse(input: &str) -> Vec<Vec<usize>> {
     input
         .lines()
         .map(|l| {
@@ -47,7 +47,7 @@ fn validate_report(report: &Vec<usize>) -> (usize, usize) {
 }
 
 #[aoc(day2, part1)]
-pub fn solve_d2_p1(table: &[Vec<usize>]) -> usize {
+pub fn part1(table: &[Vec<usize>]) -> usize {
     table
         .iter()
         .map(|x| {
@@ -58,7 +58,7 @@ pub fn solve_d2_p1(table: &[Vec<usize>]) -> usize {
 }
 
 #[aoc(day2, part2)]
-pub fn solve_d2_p2(table: &[Vec<usize>]) -> usize {
+pub fn part2(table: &[Vec<usize>]) -> usize {
     table
         .into_iter()
         .map(|x| {
@@ -79,4 +79,26 @@ pub fn solve_d2_p2(table: &[Vec<usize>]) -> usize {
             is_valid
         })
         .sum()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const INPUT: &'static str = "7 6 4 2 1\n\
+                                 1 2 7 8 9\n\
+                                 9 7 6 2 1\n\
+                                 1 3 2 4 5\n\
+                                 8 6 4 4 1\n\
+                                 1 3 6 7 9";
+
+    #[test]
+    fn part1_example() {
+        assert_eq!(part1(&parse(INPUT)), 2);
+    }
+
+    #[test]
+    fn part2_example() {
+        assert_eq!(part2(&parse(INPUT)), 4);
+    }
 }
