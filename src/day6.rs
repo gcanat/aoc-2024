@@ -2,15 +2,15 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use rayon::prelude::*;
 use std::collections::HashSet;
 
-const GRID_SIZE: usize = 130;
 // directions in that order: Up, Right, Down, Left.
 const DIRECTIONS: [(i32, i32); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 
-type Map = [[usize; GRID_SIZE]; GRID_SIZE];
+type Map = Vec<Vec<i32>>;
 
 #[aoc_generator(day6)]
 fn parse(input: &str) -> (Map, (i32, i32)) {
-    let mut grid = [[0; GRID_SIZE]; GRID_SIZE];
+    let grid_size = input.lines().count();
+    let mut grid = vec![vec![0; grid_size]; grid_size];
     let mut guard_pos = (0, 0);
     for (i, l) in input.lines().enumerate() {
         for (j, c) in l.chars().enumerate() {
@@ -111,7 +111,7 @@ fn part1(input: &(Map, (i32, i32))) -> usize {
 
 #[aoc(day6, part2)]
 fn part2((map, guard_pos): &(Map, (i32, i32))) -> usize {
-    let visited = solve1(&(*map, (guard_pos.0, guard_pos.1)));
+    let visited = solve1(&(map.clone(), (guard_pos.0, guard_pos.1)));
     visited
         .par_iter()
         .map(|(x, y)| {
@@ -125,7 +125,6 @@ fn part2((map, guard_pos): &(Map, (i32, i32))) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    // FIXME: need to modify GRID_SIZE to 10 before running the tests!
 
     const INPUT: &'static str = "....#.....\n\
                                  .........#\n\
