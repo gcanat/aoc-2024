@@ -16,7 +16,7 @@ pub fn parse1(input: &str) -> Vec<(usize, usize)> {
 }
 
 #[aoc(day3, part1)]
-pub fn part1(mult: &Vec<(usize, usize)>) -> usize {
+pub fn part1(mult: &[(usize, usize)]) -> usize {
     mult.iter().fold(0, |acc, (a, b)| acc + (a * b))
 }
 
@@ -28,7 +28,7 @@ pub fn parse2(input: &str) -> Vec<(usize, usize)> {
 }
 
 #[aoc(day3, part2)]
-pub fn part2(mult: &Vec<(usize, usize)>) -> usize {
+pub fn part2(mult: &[(usize, usize)]) -> usize {
     mult.iter().fold(0, |acc, (a, b)| acc + (a * b))
 }
 

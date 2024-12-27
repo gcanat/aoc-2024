@@ -18,13 +18,13 @@ fn update_number(n: u64) -> (u64, Option<u64>) {
         let base = 10_u64.pow(n_digits / 2);
         let left = n / base;
         let right = n % base;
-        return (left, Some(right));
+        (left, Some(right))
     } else {
-        return (n * 2024, None);
+        (n * 2024, None)
     }
 }
 
-fn solve(input: &Vec<u64>, n: u64) -> u64 {
+fn solve(input: &[u64], n: u64) -> u64 {
     let mut val_map: HashMap<u64, u64> = HashMap::new();
     for k in input.iter() {
         val_map.entry(*k).and_modify(|v| *v += 1).or_insert(1);
@@ -44,12 +44,12 @@ fn solve(input: &Vec<u64>, n: u64) -> u64 {
 }
 
 #[aoc(day11, part1)]
-fn part1(input: &Vec<u64>) -> u64 {
+fn part1(input: &[u64]) -> u64 {
     solve(input, 25)
 }
 
 #[aoc(day11, part2)]
-fn part2(input: &Vec<u64>) -> u64 {
+fn part2(input: &[u64]) -> u64 {
     solve(input, 75)
 }
 

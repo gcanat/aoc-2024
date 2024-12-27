@@ -74,8 +74,8 @@ fn get_slice(sub_grid: &SubGridX, coords: &[[usize; 2]; 3]) -> [usize; 3] {
 
 fn search_subgrid(sub_grid: &SubGridX) -> usize {
     let mut count = 0;
-    for i in 0..8 {
-        let slice = get_slice(sub_grid, &COORDS[i]);
+    for coo in &COORDS {
+        let slice = get_slice(sub_grid, coo);
         if is_xmas(&slice) {
             count += 1;
         }
@@ -125,8 +125,8 @@ fn get_slice_a(sub_grid: &SubGridA, coords: &[[usize; 2]; 2]) -> [usize; 2] {
 
 fn search_subgrid_a(sub_grid: &SubGridA) -> usize {
     let mut count = 0;
-    for i in 0..2 {
-        let slice = get_slice_a(sub_grid, &COORDS_A[i]);
+    for coo in &COORDS_A {
+        let slice = get_slice_a(sub_grid, coo);
         if is_mas(&slice) {
             count += 1;
         }

@@ -17,20 +17,13 @@ pub fn parse(input: &str) -> Vec<Vec<usize>> {
 
 fn validate_level(range: &[usize], is_decrease: bool) -> bool {
     let diff = range[1] as i32 - range[0] as i32;
-    if diff == 0 {
-        return false;
-    } else if diff.abs() > 3 {
-        return false;
-    } else if (diff > 0) && is_decrease {
-        return false;
-    } else if (diff < 0) && !is_decrease {
-        return false;
-    } else {
-        return true;
-    }
+    !((diff == 0)
+        || (diff.abs() > 3)
+        || ((diff > 0) && is_decrease)
+        || ((diff < 0) && !is_decrease))
 }
 
-fn validate_report(report: &Vec<usize>) -> (usize, usize) {
+fn validate_report(report: &[usize]) -> (usize, usize) {
     let mut is_valid = 1;
     let line_len = report.len();
     let is_decrease = (report[1] as i32 - report[0] as i32) < 0;
@@ -51,7 +44,7 @@ pub fn part1(table: &[Vec<usize>]) -> usize {
     table
         .iter()
         .map(|x| {
-            let (is_valid, _) = validate_report(&x);
+            let (is_valid, _) = validate_report(x);
             is_valid
         })
         .sum()
@@ -60,7 +53,7 @@ pub fn part1(table: &[Vec<usize>]) -> usize {
 #[aoc(day2, part2)]
 pub fn part2(table: &[Vec<usize>]) -> usize {
     table
-        .into_iter()
+        .iter()
         .map(|x| {
             let (mut is_valid, bad_lvl) = validate_report(x);
             if is_valid == 0 {

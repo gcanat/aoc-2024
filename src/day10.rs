@@ -40,7 +40,7 @@ fn explore_point(coord: &(i32, i32), grid: &[Vec<i32>], ends: &mut HashSet<(i32,
             valid_paths.push((next_x, next_y));
         }
     }
-    if valid_paths.len() == 0 {
+    if valid_paths.is_empty() {
         return 0;
     }
     let mut count = 0;
@@ -59,7 +59,7 @@ fn part1(input: &(Vec<Vec<i32>>, HashSet<(i32, i32)>)) -> usize {
         let Some(curr_coord) = trail_iter.next() else {
             break;
         };
-        let _ = explore_point(&curr_coord, &input.0, &mut ends);
+        let _ = explore_point(curr_coord, &input.0, &mut ends);
         count += ends.len();
         ends.clear();
     }
@@ -75,7 +75,7 @@ fn part2(input: &(Vec<Vec<i32>>, HashSet<(i32, i32)>)) -> usize {
         let Some(curr_coord) = trail_iter.next() else {
             break;
         };
-        count += explore_point(&curr_coord, &input.0, &mut ends);
+        count += explore_point(curr_coord, &input.0, &mut ends);
     }
     count
 }

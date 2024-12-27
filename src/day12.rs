@@ -52,7 +52,7 @@ fn explore_point(
             }
             if !is_prev_border {
                 // need to check what's the char in the diagonal to the current position
-                // to check for "inside" corners 
+                // to check for "inside" corners
                 let diag_pos = ((curr_pos.0 + diag.0), (curr_pos.1 + diag.1));
                 let diag_char = grid[diag_pos.0 as usize][diag_pos.1 as usize];
                 if diag_char != curr_char {
@@ -70,7 +70,8 @@ fn explore_point(
     }
     border_count += borders;
     for pos in next_pos_explore.iter() {
-        (tile_count, border_count, corner_count) = explore_point(&pos, grid, visited, tile_count, border_count, corner_count);
+        (tile_count, border_count, corner_count) =
+            explore_point(pos, grid, visited, tile_count, border_count, corner_count);
     }
     (tile_count, border_count, corner_count)
 }
@@ -83,9 +84,10 @@ fn part1((grid, _char_set): &(Map, HashSet<char>)) -> usize {
     for i in 1..(grid_size - 1) {
         for j in 1..(grid_size - 1) {
             let curr_pos = (i as i32, j as i32);
-            if visited.get(&curr_pos).is_none() {
+            if !visited.contains(&curr_pos) {
                 visited.insert(curr_pos);
-                let (tile_count, border_count, _corner_count) = explore_point(&curr_pos, grid, &mut visited, 1, 0,0);
+                let (tile_count, border_count, _corner_count) =
+                    explore_point(&curr_pos, grid, &mut visited, 1, 0, 0);
                 total += tile_count * border_count;
             }
         }
@@ -101,16 +103,16 @@ fn part2((grid, _char_set): &(Map, HashSet<char>)) -> usize {
     for i in 1..(grid_size - 1) {
         for j in 1..(grid_size - 1) {
             let curr_pos = (i as i32, j as i32);
-            if visited.get(&curr_pos).is_none() {
+            if !visited.contains(&curr_pos) {
                 visited.insert(curr_pos);
-                let (tile_count, _border_count, corner_count) = explore_point(&curr_pos, grid, &mut visited, 1, 0,0);
+                let (tile_count, _border_count, corner_count) =
+                    explore_point(&curr_pos, grid, &mut visited, 1, 0, 0);
                 total += tile_count * corner_count;
             }
         }
     }
     total
 }
-
 
 #[cfg(test)]
 mod tests {

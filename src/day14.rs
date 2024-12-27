@@ -50,13 +50,13 @@ fn get_quadrant(curr_pos: &[isize; 2], grid_size: &[isize; 2]) -> Option<char> {
     let x_pos = curr_pos[0] < split_point.0;
     let y_pos = curr_pos[1] < split_point.1;
     if x_pos && y_pos {
-        return Some('a');
+        Some('a')
     } else if x_pos && !y_pos {
-        return Some('b');
+        Some('b')
     } else if !x_pos && y_pos {
-        return Some('c');
+        Some('c')
     } else {
-        return Some('d');
+        Some('d')
     }
 }
 
@@ -77,11 +77,8 @@ fn part1((pos, veloc): &(Xy, Xy)) -> usize {
                 curr_pos = move_robot(&curr_pos, v, &grid_size);
             }
             let curr_quad = get_quadrant(&curr_pos, &grid_size);
-            match curr_quad {
-                Some(c) => {
-                    quad_count.entry(c).and_modify(|e| *e += 1).or_insert(1);
-                }
-                None => {}
+            if let Some(c) = curr_quad {
+                quad_count.entry(c).and_modify(|e| *e += 1).or_insert(1);
             }
         })
         .collect::<Vec<_>>();

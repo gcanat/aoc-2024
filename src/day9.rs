@@ -26,7 +26,7 @@ fn parse(input: &str) -> Vec<(usize, usize)> {
 }
 
 #[aoc(day9, part1)]
-fn part1(input: &Vec<(usize, usize)>) -> usize {
+fn part1(input: &[(usize, usize)]) -> usize {
     let mut res: Vec<usize> = Vec::new();
     let mut j = input.len() - 1;
     let (mut curr_tail_blk, _curr_tail_free) = input[j];
@@ -38,11 +38,11 @@ fn part1(input: &Vec<(usize, usize)>) -> usize {
             }
             break;
         }
-        let curr_blk = vec![i; *blk as usize];
+        let curr_blk = vec![i; *blk];
         res.extend(curr_blk);
         while free > 0 {
             if free >= curr_tail_blk {
-                free = free - curr_tail_blk;
+                free -= curr_tail_blk;
                 res.extend(vec![j; curr_tail_blk]);
                 j -= 1;
                 curr_tail_blk = input[j].0;
@@ -57,7 +57,7 @@ fn part1(input: &Vec<(usize, usize)>) -> usize {
 }
 
 #[aoc(day9, part2)]
-fn part2(input: &Vec<(usize, usize)>) -> usize {
+fn part2(input: &[(usize, usize)]) -> usize {
     // hashmap with block_id and block range: start_pos, end_pos
     let mut block_pos: HashMap<usize, (usize, usize)> = HashMap::new();
     // BTreeSet with the blocks of free space

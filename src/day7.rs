@@ -14,7 +14,7 @@ fn parse(input: &str) -> Vec<(usize, Vec<usize>)> {
                 .split_whitespace()
                 .map(|n| n.parse::<usize>().unwrap())
                 .collect();
-            return (target_num, num_list);
+            (target_num, num_list)
         })
         .collect::<Vec<_>>()
 }
@@ -36,20 +36,20 @@ impl Operation {
 }
 
 fn apply_op(current: usize, next: &[usize], target: &usize, op: Operation, day2: bool) -> bool {
-    if next.len() == 0 {
+    if next.is_empty() {
         return &current == target;
     }
     let new = op.apply(current, next[0]);
     if &new > target {
-        return false;
+        false
     } else {
         let mult_res = apply_op(new, &next[1..], target, Operation::Mult, day2);
         let add_res = apply_op(new, &next[1..], target, Operation::Add, day2);
         if !day2 {
-            return mult_res || add_res;
+            mult_res || add_res
         } else {
             let concat_res = apply_op(new, &next[1..], target, Operation::Concat, day2);
-            return mult_res || add_res || concat_res;
+            mult_res || add_res || concat_res
         }
     }
 }
@@ -61,9 +61,9 @@ fn solve(input: &Vec<(usize, Vec<usize>)>, day2: bool) -> usize {
             // initial operation is multiplying 1 with first value.
             let res = apply_op(1, &y[..], x, Operation::Mult, day2);
             if res {
-                return *x;
+                *x
             } else {
-                return 0;
+                0
             }
         })
         .sum()

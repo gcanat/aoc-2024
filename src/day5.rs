@@ -5,7 +5,6 @@ use std::collections::HashMap;
 /// Seems like a good opportunity to fool around with cmp/ordering traits.
 /// If our `Rule` struct implements the Ord trait, we can just call `sort()`
 /// on a `Vec<Rule>` to get it sorted.
-
 struct Rule {
     before: usize,
     after: Vec<usize>,
@@ -23,19 +22,16 @@ impl PartialEq for Rule {
 
 impl PartialOrd for Rule {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        if self.after.iter().any(|c| c == &other.before) {
-            Some(Ordering::Less)
-        } else {
-            None
-        }
+        Some(self.cmp(other))
     }
 }
 
 impl Ord for Rule {
     fn cmp(&self, other: &Self) -> Ordering {
-        match self.partial_cmp(other) {
-            Some(ord) => ord,
-            None => Ordering::Greater,
+        if self.after.iter().any(|c| c == &other.before) {
+            Ordering::Less
+        } else {
+            Ordering::Greater
         }
     }
 }
@@ -58,15 +54,10 @@ fn parse(input: &str) -> (Rules, Updates) {
                     before: k,
                     after: vec![v],
                 });
-            if rules.get(&v).is_none() {
-                rules.insert(
-                    v,
-                    Rule {
-                        before: v,
-                        after: vec![],
-                    },
-                );
-            }
+            rules.entry(v).or_insert_with(|| Rule {
+                before: v,
+                after: vec![],
+            });
         } else if l.contains(",") {
             let entries = l
                 .split(",")
@@ -78,7 +69,7 @@ fn parse(input: &str) -> (Rules, Updates) {
     (rules, updates)
 }
 
-fn sort_update(update: &Vec<usize>, rules: &Rules) -> Vec<usize> {
+fn sort_update(update: &[usize], rules: &Rules) -> Vec<usize> {
     let mut res = update
         .iter()
         .map(|x| rules.get(x).unwrap())
@@ -87,7 +78,7 @@ fn sort_update(update: &Vec<usize>, rules: &Rules) -> Vec<usize> {
     res.iter().map(|r| r.before).collect::<Vec<_>>()
 }
 
-fn get_middle(update: &Vec<usize>) -> usize {
+fn get_middle(update: &[usize]) -> usize {
     let mid = update.len() / 2;
     update[mid]
 }
@@ -97,18 +88,18 @@ fn part1((rules, updates): &(Rules, Updates)) -> usize {
     updates
         .iter()
         .filter(|u| {
-            let sorted = sort_update(u, &rules);
+            let sorted = sort_update(u, rules);
             *u == &sorted
         })
-        .map(get_middle)
+        .map(|u| get_middle(u))
         .sum()
 }
 
 #[aoc(day5, part2)]
 fn part2((rules, updates): &(Rules, Updates)) -> usize {
     updates.iter().fold(0, |acc, u| {
-        let sorted = sort_update(u, &rules);
-        if !(u == &sorted) {
+        let sorted = sort_update(u, rules);
+        if u != &sorted {
             acc + get_middle(&sorted)
         } else {
             acc

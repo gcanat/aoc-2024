@@ -32,10 +32,10 @@ fn get_next_pos(
 ) -> Option<((i32, i32), bool)> {
     let next_pos = (curr_pos.0 + direction.0, curr_pos.1 + direction.1);
     let grid_size = grid.len() as i32;
-    if (&next_pos.0 == &grid_size)
-        || (&next_pos.0 < &0)
-        || (&next_pos.1 == &grid_size)
-        || (&next_pos.1 < &0)
+    if (next_pos.0 == grid_size)
+        || (next_pos.0 < 0)
+        || (next_pos.1 == grid_size)
+        || (next_pos.1 < 0)
     {
         None
     } else {
@@ -54,7 +54,7 @@ fn solve1((map, guard_pos): &(Map, (i32, i32))) -> HashSet<(i32, i32)> {
     visited.insert((curr_pos.0, curr_pos.1));
 
     loop {
-        let Some((next_pos, is_obstacle)) = get_next_pos(&curr_pos, &direction, &map) else {
+        let Some((next_pos, is_obstacle)) = get_next_pos(&curr_pos, direction, map) else {
             // guard went out of the map
             break;
         };
@@ -81,7 +81,7 @@ fn solve2((map, guard_pos): &(Map, (i32, i32))) -> usize {
     let mut visited: HashSet<(i32, i32, i32, i32)> = HashSet::new();
 
     loop {
-        let Some((next_pos, is_obstacle)) = get_next_pos(&curr_pos, &direction, &map) else {
+        let Some((next_pos, is_obstacle)) = get_next_pos(&curr_pos, direction, map) else {
             // guard went out of the map
             break;
         };

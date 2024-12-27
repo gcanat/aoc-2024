@@ -6,14 +6,12 @@ use std::iter::zip;
 pub fn parse(input: &str) -> (Vec<usize>, Vec<usize>) {
     let mut left_list: Vec<usize> = Vec::new();
     let mut right_list: Vec<usize> = Vec::new();
-    let _ = input
-        .lines()
-        .map(|l| {
-            let mut iter = l.split_whitespace();
-            left_list.push(iter.next().unwrap().parse::<usize>().unwrap());
-            right_list.push(iter.next().unwrap().parse::<usize>().unwrap());
-        })
-        .collect::<()>();
+    input.lines().for_each(|l| {
+        let mut iter = l.split_whitespace();
+        left_list.push(iter.next().unwrap().parse::<usize>().unwrap());
+        right_list.push(iter.next().unwrap().parse::<usize>().unwrap());
+    });
+
     (left_list, right_list)
 }
 
