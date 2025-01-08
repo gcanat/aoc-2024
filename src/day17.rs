@@ -2,8 +2,8 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use std::collections::VecDeque;
 
 #[aoc_generator(day17)]
-fn parse(input: &str) -> ([i64;3], Vec<i64>) {
-    let mut abc: [i64; 3] = [0,0,0];
+fn parse(input: &str) -> ([i64; 3], Vec<i64>) {
+    let mut abc: [i64; 3] = [0, 0, 0];
     let mut program: Vec<i64> = Vec::new();
     for l in input.lines() {
         if let Some((head, num)) = l.split_once(":") {
@@ -18,7 +18,11 @@ fn parse(input: &str) -> ([i64;3], Vec<i64>) {
                 abc[2] = num.trim().parse().unwrap();
             } else if head == "Program" {
                 println!("Program: {}", num);
-                program = num.trim().split(',').map(|x| x.parse::<i64>().unwrap()).collect();
+                program = num
+                    .trim()
+                    .split(',')
+                    .map(|x| x.parse::<i64>().unwrap())
+                    .collect();
             }
         }
     }
@@ -36,7 +40,14 @@ struct Computer {
 
 impl Computer {
     fn new(program: Vec<i64>, abc: [i64; 3]) -> Self {
-        Computer { a: abc[0], b: abc[1], c: abc[2], ip: 0, program, output: VecDeque::new() }
+        Computer {
+            a: abc[0],
+            b: abc[1],
+            c: abc[2],
+            ip: 0,
+            program,
+            output: VecDeque::new(),
+        }
     }
 
     fn get_combo_value(&self, operand: i64) -> i64 {
@@ -58,10 +69,12 @@ impl Computer {
                 0 => self.a >>= self.get_combo_value(operand),
                 1 => self.b ^= operand,
                 2 => self.b = self.get_combo_value(operand) % 8,
-                3 => if self.a != 0 {
-                    self.ip = operand as usize;
-                    continue;
-                },
+                3 => {
+                    if self.a != 0 {
+                        self.ip = operand as usize;
+                        continue;
+                    }
+                }
                 4 => self.b ^= self.c,
                 5 => self.output.push_back(self.get_combo_value(operand) % 8),
                 6 => self.b = self.a >> self.get_combo_value(operand),
@@ -73,7 +86,7 @@ impl Computer {
     }
 }
 
-fn find_initial_a(program: Vec<i64>)  -> i64 {
+fn find_initial_a(program: Vec<i64>) -> i64 {
     let mut a = 0;
     for i in (0..program.len()).rev() {
         a <<= 3;
@@ -84,7 +97,7 @@ fn find_initial_a(program: Vec<i64>)  -> i64 {
             if result != &program[i..] {
                 a += 1;
             } else {
-                break
+                break;
             }
         }
     }
@@ -92,17 +105,21 @@ fn find_initial_a(program: Vec<i64>)  -> i64 {
 }
 
 #[aoc(day17, part1)]
-fn part1((abc, program): &([i64;3], Vec<i64>)) -> String {
-    let mut computer = Computer::new(program.to_vec(), *abc); 
+fn part1((abc, program): &([i64; 3], Vec<i64>)) -> String {
+    let mut computer = Computer::new(program.to_vec(), *abc);
     computer.run();
-    computer.output.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(",")
+    computer
+        .output
+        .iter()
+        .map(|x| x.to_string())
+        .collect::<Vec<_>>()
+        .join(",")
 }
 
 #[aoc(day17, part2)]
-fn part2((_abc, program): &([i64;3], Vec<i64>)) -> i64 {
+fn part2((_abc, program): &([i64; 3], Vec<i64>)) -> i64 {
     find_initial_a(program.to_vec())
 }
-
 
 #[cfg(test)]
 mod tests {
