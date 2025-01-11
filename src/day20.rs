@@ -89,7 +89,7 @@ fn solve(grid: &Grid, race_info: &RaceInfo, min_save: i32, max_iter: i32) -> usi
         }
     }
 
-    let mut savings: HashMap<[i32; 4], i32> = HashMap::new();
+    let mut savings: Vec<i32> = Vec::new();
 
     for ((x, y), dist1) in path_map.iter() {
         let pos1 = Pos { x: *x, y: *y };
@@ -100,7 +100,7 @@ fn solve(grid: &Grid, race_info: &RaceInfo, min_save: i32, max_iter: i32) -> usi
 
     savings
         .iter()
-        .filter(|(_k, v)| *v > &(min_save - 1))
+        .filter(|v| *v > &(min_save - 1))
         .count()
 }
 
@@ -126,7 +126,7 @@ fn find_cheat(
     pos1: &Pos,
     dist1: &i32,
     path_map: &PathMap,
-    savings: &mut HashMap<[i32; 4], i32>,
+    savings: &mut Vec<i32>,
     cheat_duration: i32,
 ) {
     // Find all positions that are at `cheat_duration` distance
@@ -152,7 +152,7 @@ fn find_cheat(
                 let diff = dist1 - dist2 - cheat_duration;
                 let l1_dist = pos1.x.abs_diff(pos2.x) + pos1.y.abs_diff(pos2.y);
                 if (l1_dist as i32) < diff {
-                    savings.insert([pos1.x, pos1.y, pos2.x, pos2.y], diff);
+                    savings.push(diff);
                 }
             }
         }
